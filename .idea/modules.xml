@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/scheduler-client/scheduler-client.iml" filepath="$PROJECT_DIR$/scheduler-client/scheduler-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scheduler-client-web-demo/scheduler-client-web-demo.iml" filepath="$PROJECT_DIR$/scheduler-client-web-demo/scheduler-client-web-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scheduler-platform.iml" filepath="$PROJECT_DIR$/scheduler-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scheduler-server-web/scheduler-server-web.iml" filepath="$PROJECT_DIR$/scheduler-server-web/scheduler-server-web.iml" />
+    </modules>
+  </component>
+</project>

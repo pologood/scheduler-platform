@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+">
+    <!--启用注解-->
+	<context:annotation-config />
+    <!--包扫描-->
+	<context:component-scan base-package="com.sncfc.scheduler"/>
+    <!--aop启用-->
+    <aop:aspectj-autoproxy/>
+
+    <!-- 用于将对象转换为 JSON -->
+    <!--&lt;!&ndash; 启动Spring MVC的注解功能，完成请求和注解POJO的映射,解决@ResponseBody乱码问题, 需要在annotation-driven之前,否则乱码问题同样无法解决 &ndash;&gt;-->
+	<!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">-->
+		<!--<property name="messageConverters">-->
+			<!--<list>-->
+				<!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />-->
+				<!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+					<!--<property name="supportedMediaTypes">-->
+						<!--<list>-->
+							<!--<value>text/plain;charset=UTF-8</value>-->
+						<!--</list>-->
+					<!--</property>-->
+				<!--</bean>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+    <!-- 用于将对象转换为 JSON  -->
+    <bean id="stringConverter"
+          class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="stringConverter" />
+                <ref bean="jsonConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <!--mvc-->
+    <mvc:annotation-driven />
+
+    <mvc:resources location="/img/" mapping="/img/**"/>
+    <mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+    <mvc:resources location="/font-awesome/" mapping="/font-awesome/**"/>
+    <mvc:resources location="/fonts/" mapping="/fonts/**"/>
+	<bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+				  value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/admin/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.scheduler.instanceName">SchedulerPlatform</prop>
+                <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+                <!-- 线程池配置 -->
+                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+                <prop key="org.quartz.threadPool.threadCount">20</prop>
+                <prop key="org.quartz.threadPool.threadPriority">5</prop>
+                <!-- JobStore 配置 -->
+                <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+
+                <!-- 集群配置 -->
+                <prop key="org.quartz.jobStore.isClustered">true</prop>
+                <prop key="org.quartz.jobStore.clusterCheckinInterval">15000</prop>
+                <prop key="org.quartz.jobStore.maxMisfiresToHandleAtATime">1</prop>
+
+                <prop key="org.quartz.jobStore.misfireThreshold">1000</prop>
+
+                <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+            </props>
+        </property>
+
+        <property name="schedulerName" value="SchedulerPlatform" />
+        <!--必须的，QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="10" />
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
+        <!--可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了 -->
+        <property name="overwriteExistingJobs" value="true" />
+        <!-- 设置自动启动 -->
+        <property name="autoStartup" value="true" />
+
+        <!--<property name="configLocation" value="classpath:quartz.properties" />-->
+
+
+    </bean>
+</beans>
