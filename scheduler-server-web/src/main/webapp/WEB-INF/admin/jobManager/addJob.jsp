@@ -173,6 +173,7 @@
     </div>
 </div>
 
+
 <script src="${pageContext.request.contextPath}/js/jobManager/addJob.js"></script>
 
 
