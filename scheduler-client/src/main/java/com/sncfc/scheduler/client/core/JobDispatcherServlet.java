@@ -24,7 +24,7 @@ public class JobDispatcherServlet extends HttpServlet {
 
     private static final long serialVersionUID = -3932783704101430036L;
 
-    private static final long REPORT_PERIOD_TIME = 6000L;
+    private static final long REPORT_PERIOD_TIME = 60000L;
 
     private static final String CONTENT_TYPE_SERIALIZED_OBJECT = "application/x-java-serialized-object";
 
