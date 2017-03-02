@@ -1,4 +1,4 @@
-# 创建表 自定义表
+# 表结构
 create table SCHEDULE_JOB
 (
   schedule_job_id NUMBER(16) primary key,
