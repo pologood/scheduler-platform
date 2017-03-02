@@ -42,19 +42,31 @@ public class ValidateController {
             if(map.containsKey("nodeName") && map.containsKey("fireInstanceId")){
                 resultFlag = scheduleJobService.existedScheduleLog(map.get("nodeName").toString(),map.get("fireInstanceId").toString());
             }
-            writeResponse(response,resultFlag);
+            logger.info("jobCmdValidate:" + map.toString() + " resultFlag = " + resultFlag);
         } catch (Exception e) {
             logger.error("jobCmdValidate",e);
+        }finally {
+            try {
+                writeResponse(response,resultFlag);
+            } catch (IOException e) {
+                logger.error("jobCmdValidate",e);
+            }
         }
     }
     @RequestMapping(value = "jobExecutionReport")
     public void jobExecutionReport(HttpServletRequest requset, HttpServletResponse response) {
+        List<String> unCompleteList = null;
         try {
             List requestList = (List)readRequest(requset);
-            List<String> unCompleteList = scheduleJobService.updateScheduleLog(requestList);
-            writeResponse(response,unCompleteList);
+            unCompleteList = scheduleJobService.updateScheduleLog(requestList);
         } catch (IOException e) {
             logger.error("jobExecutionReport",e);
+        }finally {
+            try {
+                writeResponse(response,unCompleteList);
+            } catch (IOException e) {
+                logger.error("jobCmdValidate",e);
+            }
         }
     }
 
