@@ -121,4 +121,8 @@ public interface IScheduleJobDao {
     List countJobs();
 
     List countAllTriggers();
+
+    int updateScheduleLog(ScheduleLog scheduleLog);
+
+    int existedScheduleLog(String fireInstanceId);
 }

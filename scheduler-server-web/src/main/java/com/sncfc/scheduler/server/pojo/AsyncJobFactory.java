@@ -59,6 +59,8 @@ public class AsyncJobFactory extends QuartzJobBean {
         scheduleLog.setJobName(scheduleJob.getJobName());
         scheduleLog.setJobGroup(scheduleJob.getJobGroup());
         scheduleLog.setFireInstanceId(fireInstanceId);
+        //插入执行记录
+        scheduleJobService.addScheduleLog(scheduleLog);
         try {
             responseMap = new HttpClientUtil("http://"+scheduleJob.getUrl()).sendReq(map);
             logger.info("responseMap:"+responseMap);
@@ -78,6 +80,8 @@ public class AsyncJobFactory extends QuartzJobBean {
             scheduleLog.setErrorMessage(e.getMessage());
             logger.error("触发失败",e);
         }
-        scheduleJobService.addScheduleLog(scheduleLog);
+        //更新执行记录
+        scheduleJobService.updateScheduleLog(scheduleLog);
+        logger.info("trigger time");
     }
 }

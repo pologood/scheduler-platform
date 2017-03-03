@@ -75,7 +75,9 @@ public class ScheduleJobDaoImpl extends BaseJdbcDAO implements IScheduleJobDao {
 
     @Override
     public int insertScheduleLog(ScheduleLog scheduleLog) {
-        final String sql = "INSERT INTO schedule_log(JOB_NAME,JOB_GROUP,FIRE_INSTANCE_ID,STATUS,SUCCESS,NODE_NAME,ERROR_MESSAGE,TRIGGER_TYPE,CREATE_TIME) " + "VALUES(?, ?, ?, ?, ?, ?, ?,?,SYSDATE)";
+        final String sql = "INSERT INTO schedule_log" +
+                " (JOB_NAME,JOB_GROUP,FIRE_INSTANCE_ID,STATUS,SUCCESS,NODE_NAME,ERROR_MESSAGE,TRIGGER_TYPE,CREATE_TIME) " +
+                " VALUES(?, ?, ?, ?, ?, ?, ?,?,SYSDATE)";
         return update(sql, new Object[]{scheduleLog.getJobName(), scheduleLog.getJobGroup(), scheduleLog.getFireInstanceId(),scheduleLog.getStatus(), scheduleLog.getSuccess(), scheduleLog.getNodeName(),scheduleLog.getErrorMessage(),scheduleLog.getTriggerType()});
     }
 
@@ -190,6 +192,19 @@ public class ScheduleJobDaoImpl extends BaseJdbcDAO implements IScheduleJobDao {
     public List countAllTriggers() {
         String sql = "SELECT SUCCESS,COUNT(*) SUCESS_NUMS FROM SCHEDULE_LOG GROUP BY SUCCESS";
         return queryForList(sql);
+    }
+
+    @Override
+    public int updateScheduleLog(ScheduleLog scheduleLog) {
+        String sql = "UPDATE SCHEDULE_LOG SET STATUS = ?,SUCCESS = ?,NODE_NAME = ?,ERROR_MESSAGE = ?  WHERE FIRE_INSTANCE_ID = ? ";
+        return update(sql,new Object[]{scheduleLog.getStatus(),scheduleLog.getSuccess(),scheduleLog.getNodeName(),scheduleLog.getErrorMessage(),scheduleLog.getFireInstanceId()});
+    }
+
+    @Override
+    public int existedScheduleLog(String fireInstanceId) {
+        final String sql = "SELECT COUNT(*) COUNTS FROM SCHEDULE_LOG WHERE FIRE_INSTANCE_ID = ?";
+        Integer counts = queryForObject(sql, new Object[]{fireInstanceId}, Integer.class);
+        return counts;
     }
 
     @Override

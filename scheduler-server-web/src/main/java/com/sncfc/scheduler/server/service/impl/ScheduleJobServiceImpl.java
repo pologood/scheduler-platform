@@ -134,6 +134,7 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
 
 
     @Override
+    @Transactional(propagation= Propagation.NOT_SUPPORTED)
     public void runOnce(Long scheduleJobId) {
         ScheduleJob scheduleJob = schedulerJobDao.queryScheduleJob(scheduleJobId);
         AsyncJobFactory.trigger(scheduleJob.getScheduleJobId(),UUID.randomUUID().toString(),ScheduleLog.CUSTOMER_TRIGGER);
@@ -169,8 +170,18 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
 
 
     @Override
+    @Transactional(propagation= Propagation.NOT_SUPPORTED)
     public boolean existedScheduleLog(String nodeName, String fireInstanceId) {
         int counts = schedulerJobDao.existedScheduleLog(nodeName,fireInstanceId) ;
+        if(counts > 0){
+            return true;
+        }
+        return false;
+    }
+    @Override
+    @Transactional(propagation= Propagation.NOT_SUPPORTED)
+    public boolean existedScheduleLog(String fireInstanceId) {
+        int counts = schedulerJobDao.existedScheduleLog(fireInstanceId) ;
         if(counts > 0){
             return true;
         }
@@ -226,5 +237,9 @@ public class ScheduleJobServiceImpl implements IScheduleJobService {
         return map;
     }
 
-
+    @Override
+    @Transactional(propagation= Propagation.NOT_SUPPORTED)
+    public int updateScheduleLog(ScheduleLog scheduleLog) {
+        return schedulerJobDao.updateScheduleLog(scheduleLog);
+    }
 }

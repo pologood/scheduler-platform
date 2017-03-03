@@ -111,6 +111,7 @@ public interface IScheduleJobService {
      * @return
      */
     boolean existedScheduleLog(String nodeName, String fireInstanceId);
+    boolean existedScheduleLog(String fireInstanceId);
 
     /**
      * 更新
@@ -171,4 +172,10 @@ public interface IScheduleJobService {
      * @return
      */
     Map countAllTriggers();
+
+    /**
+     * 更新日志
+     * @param scheduleLog
+     */
+    int updateScheduleLog(ScheduleLog scheduleLog);
 }

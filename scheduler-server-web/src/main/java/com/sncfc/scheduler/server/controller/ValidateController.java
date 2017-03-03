@@ -40,7 +40,8 @@ public class ValidateController {
         try {
             Map map = (Map)readRequest(requset);
             if(map.containsKey("nodeName") && map.containsKey("fireInstanceId")){
-                resultFlag = scheduleJobService.existedScheduleLog(map.get("nodeName").toString(),map.get("fireInstanceId").toString());
+                logger.info("jobCmdValidate time");
+                resultFlag = scheduleJobService.existedScheduleLog(map.get("fireInstanceId").toString());
             }
             logger.info("jobCmdValidate:" + map.toString() + " resultFlag = " + resultFlag);
         } catch (Exception e) {
